@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { type VerifyPDFResponse } from '@/types/pdf-signature-reader';
 import * as iconv from 'iconv-lite';
-import { Building, Calendar, CheckCircle, FileText, HelpCircle, Shield, Upload, User, XCircle } from 'lucide-react';
+import { Building, Calendar, CheckCircle, FileText, HelpCircle, RotateCcw, Shield, Upload, User, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function PDFSignatureChecker() {
@@ -22,6 +22,13 @@ export default function PDFSignatureChecker() {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const handleReset = () => {
+    setFile(null);
+    setResult(null);
+    setError(null);
+    setOpenItems([]);
+  };
 
   const validateAndSetFile = (selectedFile: File | null) => {
     if (selectedFile?.type === 'application/pdf') {
@@ -150,7 +157,7 @@ export default function PDFSignatureChecker() {
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold text-gray-900">PDF Signature Checker</h1>
-          <p className="text-lg text-gray-600">Kiểm tra chữ ký số trong file PDF</p>
+          <p className="text-lg text-gray-600">Xác thực chữ ký số và thông tin chứng chỉ kỹ thuật số</p>
         </div>
 
         <Card>
@@ -160,7 +167,7 @@ export default function PDFSignatureChecker() {
               Upload PDF File
             </CardTitle>
             <CardDescription>
-              Chọn file PDF có chữ ký số để kiểm tra thông tin certificate
+              Tải lên file PDF để xác thực chữ ký điện tử và kiểm tra thông tin chứng chỉ
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -234,6 +241,7 @@ export default function PDFSignatureChecker() {
         )}
 
         {result?.success && result.signatures.length > 0 && (
+          <>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -461,6 +469,31 @@ export default function PDFSignatureChecker() {
               })}
             </CardContent>
           </Card>
+
+          <Alert className="bg-green-50 border-green-300 shadow-sm">
+            <Shield className="h-5 w-5 text-green-600" />
+            <AlertDescription className="text-green-800">
+              <div className="space-y-2">
+                <p className="font-semibold">Cam kết bảo mật dữ liệu</p>
+                <p className="text-sm">
+                  Chúng tôi cam kết rằng file PDF của bạn sẽ <span className="font-medium">không được lưu trữ hoặc sử dụng cho bất kỳ mục đích nào</span> sau khi kiểm tra chữ ký. Tất cả các xử lý diễn ra trên máy chủ của chúng tôi và dữ liệu sẽ bị xóa ngay sau khi hoàn thành.
+                </p>
+              </div>
+            </AlertDescription>
+          </Alert>
+          </>
+        )}
+
+        {/* Floating Check Another File Button */}
+        {result?.success && result.signatures.length > 0 && (
+          <button
+            onClick={handleReset}
+            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-all duration-200 hover:shadow-xl flex items-center gap-2"
+            title="Kiểm tra file khác"
+          >
+            <RotateCcw className="h-5 w-5" />
+            <span className="hidden sm:inline text-sm font-medium">File khác</span>
+          </button>
         )}
       </div>
     </div>

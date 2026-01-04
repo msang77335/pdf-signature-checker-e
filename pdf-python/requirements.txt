@@ -3,3 +3,4 @@ pypdf
 cryptography
 asn1crypto
 endesive
+requests

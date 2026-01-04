@@ -1,3 +1,5 @@
 flask
-pyhanko
-pyhanko-certvalidator
+pypdf
+cryptography
+asn1crypto
+endesive

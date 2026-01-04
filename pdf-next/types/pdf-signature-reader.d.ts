@@ -1,34 +1,20 @@
-declare module 'pdf-signature-reader' {
-  export interface CertInfo {
-    clientCertificate: boolean;
-    issuedBy: {
-      commonName: string;
-      organizationName: string;
-      countryName: string;
-    };
-    issuedTo: {
-      countryName: string;
-      stateOrProvinceName?: string;
-      organizationName?: string;
-      commonName?: string;
-    };
-    validityPeriod: {
-      notBefore: string;
-      notAfter: string;
-    };
-    pemCertificate: string;
-  }
-
-  export function getCertificatesInfoFromPDF(buffer: Buffer): Promise<CertInfo[][]>;
-}
-
 export interface SignatureInfo {
-  coverage: string;
+  byte_range: string | null;
+  coverage: string | null;
   document_unchanged: boolean;
   field_name: string;
   intact: boolean;
   is_expired: boolean;
   is_valid: boolean;
+  is_self_signed: boolean;
+  cryptographic_signature_valid: boolean;
+  cryptographic_message: string | null;
+  expiration_status: string | null;
+  days_until_expiry: number | null;
+  has_timestamp: boolean;
+  timestamp_source: string | null;
+  key_size: number | null;
+  hash_algorithm: string | null;
   issuer: {
     common_name: string;
     country: string;
@@ -37,15 +23,23 @@ export interface SignatureInfo {
   };
   signer: {
     common_name: string;
-    country: string;
-    state_province?: string;
+    country?: string;
+    state_or_province?: string;
+    city?: string;
+    organization?: string;
     user_id?: string;
   };
   signing_time: string;
-  total_size: number;
-  valid_at_signing_time: boolean;
+  signing_timezone?: string;
+  total_size: number | null;
   valid_from: string;
   valid_until: string;
+  structure_validation?: {
+    is_structure_valid: boolean;
+    validation_summary: string;
+    warnings: string[];
+    formatting_errors: string[];
+  };
 }
 
 export interface VerifyPDFResponse {
@@ -53,3 +47,4 @@ export interface VerifyPDFResponse {
   count: number;
   signatures: SignatureInfo[];
 }
+

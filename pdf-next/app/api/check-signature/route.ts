@@ -10,8 +10,9 @@ export async function POST(request: NextRequest) {
     const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
     formData.append("file", blob, "document.pdf");
 
-    // Forward to Python API using Docker network alias
-    const response = await fetch("http://pdf-python:5001/api/verify-pdf", {
+    // Forward to Python API - use environment variable or fallback to localhost
+    const apiUrl = process.env.PYTHON_API_URL || "http://localhost:5001";
+    const response = await fetch(`${apiUrl}/api/verify-pdf`, {
       method: "POST",
       body: formData,
     });

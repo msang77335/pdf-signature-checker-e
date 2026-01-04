@@ -27,7 +27,7 @@ services:
     #   - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://pdf-python:5001
+      - PYTHON_API_URL=http://pdf-python:5001
     depends_on:
       - pdf-python
     networks:
